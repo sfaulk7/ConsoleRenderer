@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp> // for glm::value_ptr
 #include <stb_image.h>
 #include <vector>
+#include <iostream>
 
 
 
@@ -123,6 +124,60 @@ namespace aie
         return MakeGeometry(&vertices[0], (GLsizei)vertices.size(), &indices[0], (GLsizei)shapes[0].mesh.indices.size());
     }
 
+    /**
+      * Checks if shader program is linking correctly.
+      *
+      * Linker errors can occur if a later shader is expecting an input
+      * that an earlier shader did not output.
+      *
+      * @return True if good, otherwise false
+      */
+    bool CheckShader(const Shader& Shad)
+    {
+        GLint status = GL_FALSE;
+        glGetProgramiv(Shad.Program, GL_LINK_STATUS, &status);
+
+        if (status != GL_TRUE)
+        {
+            GLint logLength = 0;
+            glGetProgramiv(Shad.Program, GL_INFO_LOG_LENGTH, &logLength);
+            GLchar* log = new GLchar[logLength];
+            glGetProgramInfoLog(Shad.Program, logLength, 0, log);
+
+            std::cerr << log << std::endl;
+
+            delete[] log;
+        }
+
+        return status == GL_TRUE;
+    }
+    
+    /**
+     * Checks if shader (not the shader PROGRAM), such as Vertex or Fragment
+     * shader is compiled correctly
+     *
+     * @return True if good, otherwise false
+     */
+    bool CheckSubShader(GLuint subshader)
+    {
+        GLint status = GL_FALSE;
+        glGetShaderiv(subshader, GL_COMPILE_STATUS, &status);
+
+        if (status != GL_TRUE)
+        {
+            GLint logLength = 0;
+            glGetShaderiv(subshader, GL_INFO_LOG_LENGTH, &logLength);
+            GLchar* log = new GLchar[logLength];
+            glGetShaderInfoLog(subshader, logLength, 0, log);
+
+            std::cerr << log << std::endl;
+
+            delete[] log;
+        }
+
+        return status == GL_TRUE;
+    }
+
     Shader LoadShader(const char* VertPath, const char* FragPath)
     {
         std::string VertSource = DumpToString(VertPath);
@@ -141,9 +196,12 @@ namespace aie
         GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
 
         glShaderSource(vert, 1, &vertSource, 0);
-        glShaderSource(frag, 1, &fragSource, 0);
         glCompileShader(vert);
+        assert(CheckSubShader(vert));
+
+        glShaderSource(frag, 1, &fragSource, 0);
         glCompileShader(frag);
+        assert(CheckSubShader(frag));
 
         glAttachShader(newShad.Program, vert);
         glAttachShader(newShad.Program, frag);
@@ -288,4 +346,5 @@ namespace aie
     {
         glProgramUniform3fv(shad.Program, location, 1, glm::value_ptr(value));
     }
+
 }

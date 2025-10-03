@@ -45,22 +45,26 @@ int main()
             1000.0f); //Far-Plane
 
     // define ambient color
-    glm::vec3 ambient(0.2f, 0.2f, 0.2f);
+    glm::vec3 ambient(2.0f, 2.0f, 2.0f);
     // NEW: define sun direction
-    glm::vec3 sunDirection(0, 0, 1);
+    glm::vec3 sunDirection(1, 0, 1);
+    glm::vec3 sunDirection2(2, 0, 2);
 
     while (!Window.ShouldClose())
     {
         Window.Tick();
         Window.Clear();
 
-        SetUniform(texShaderFromFile, 0, cam_proj);       // projection mat
-        SetUniform(texShaderFromFile, 1, cam_view);       // view mat
-        SetUniform(texShaderFromFile, 2, triangle_model); // model mat
+        SetUniform(texShaderFromFile, 0, cam_proj);           // projection mat
+        SetUniform(texShaderFromFile, 1, cam_view);           // view mat
+        SetUniform(texShaderFromFile, 2, triangle_model);     // model mat
 
-        SetUniform(texShaderFromFile, 3, SpearTex, 0);    // albedo (main color or texture)
-        SetUniform(texShaderFromFile, 4, ambient);        // ambient light
-        SetUniform(texShaderFromFile, 5, sunDirection);   // NEW: directional light
+        SetUniform(texShaderFromFile, 3, SpearTex, 0);        // albedo (main color or texture)
+        SetUniform(texShaderFromFile, 4, ambient);            // ambient light
+        SetUniform(texShaderFromFile, 5, sunDirection);       // NEW: directional light
+        SetUniform(texShaderFromFile, 6, glm::vec3(0, 0, 255)); // Light Color
+        SetUniform(texShaderFromFile, 7, sunDirection2);       // NEW: directional light
+        SetUniform(texShaderFromFile, 8, glm::vec3(255, 0, 0)); // Light Color
 
 
         Draw(texShaderFromFile, LoadSpear);
