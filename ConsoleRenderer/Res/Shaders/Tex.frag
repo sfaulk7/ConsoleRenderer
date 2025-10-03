@@ -19,4 +19,6 @@ void main()
 
     fragColor.xyz = baseColor.xyz * (ambientLightColor + diffuse);
     fragColor.a = baseColor.a;
+
+    fragColor = texture(albedo, vertUV);
 };

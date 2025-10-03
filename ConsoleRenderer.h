@@ -7,7 +7,7 @@ namespace aie
     struct Vertex
     {
         glm::vec4 Pos;
-        glm::vec4 Normal;
+        glm::vec4 Normals;
         glm::vec2 UVs;
         //glm::vec4 Color;
     };
@@ -46,5 +46,6 @@ namespace aie
     void SetUniform(const Shader& shad, GLuint location, const glm::mat4& value);
     void SetUniform(const Shader& shad, GLuint location, float value);
     void SetUniform(const Shader& shad, GLuint location, const Texture& tex, int textureSlot);
+    void SetUniform(const Shader& shad, GLuint location, const glm::vec3& value);
 
 }

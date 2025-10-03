@@ -31,11 +31,17 @@ namespace aie
         glBufferData(GL_ARRAY_BUFFER, VertCount * sizeof(Vertex), Verts, GL_STATIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexCount * sizeof(GLsizei), Indicies, GL_STATIC_DRAW);
 
+        //position location 0
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
+        //normals location 1
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, UVs));
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normals));
+
+        //uvs location 2
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, UVs));
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -276,5 +282,10 @@ namespace aie
 
         //Specify that texture slot as the value for the uniform
         glProgramUniform1i(shad.Program, location, textureSlot);
+    }
+
+    void SetUniform(const Shader& shad, GLuint location, const glm::vec3& value)
+    {
+        glProgramUniform3fv(shad.Program, location, 1, glm::value_ptr(value));
     }
 }

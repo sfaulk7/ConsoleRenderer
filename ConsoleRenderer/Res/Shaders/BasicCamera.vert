@@ -2,8 +2,8 @@
 
 //Vertex Attributes
 layout (location = 0) in vec4 position;
-layout (location = 1) in vec4 normal;
-layout (location = 2) in vec2 uv;
+layout (location = 1) in vec2 uv;
+layout (location = 2) in vec4 normal;
 
 //Uniforms
 layout (location = 0) uniform mat4 proj;
@@ -16,18 +16,19 @@ out vec4 vertPos;
 
 void main()
 {
-    //VERTEX SHADER LOGIC POSITION
+    //EXPORTS to FRAGMENT SHADER
     vertPos = position;
+    vertNormal = mat3(transpose(inverse(model))) * normal.xyz;
+    vertUV = uv;
+    //vertUV.x += sin(time);
+
+    //VERTEX SHADER LOGIC POSITION
+    //vec4 myPosition = position;
+    //myPosition.y += sin(time) + displacement;
 
     //transform object from ...
     // - OBJECT to WORLD (model)
     // - WORLD to CAMERA (view)
     // - CAMERA to CLIP (proj)
     gl_Position = proj * view * model * position;
-
-    //EXPORTS to FRAGMENT
-    vertUV = uv;
-    vertUV.x += sin(time);
-    
-    vertNormal = mat3(transpose(inverse(model))) * normal.xyz;
 }

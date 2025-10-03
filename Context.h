@@ -1,5 +1,7 @@
 #pragma once
 
+#include "glm/glm.hpp"
+
 struct GLFWwindow;
 namespace aie
 {
@@ -16,6 +18,9 @@ namespace aie
         void Term();
         bool ShouldClose();
 
+        bool IsKeyDown(int key);
+        glm::vec2 GetMousePosition();
+        float GetAxis(int negativeKey, int positiveKey);
     };
 
 }

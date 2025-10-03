@@ -16,7 +16,7 @@ int main()
 
 
     Geometry LoadSpear = LoadGeometry("ConsoleRenderer/Res/SampleAssets/obj/soulspear.obj");
-    //Texture SpearTex = LoadTexture("ConsoleRenderer/Res/SampleAssets/img/soulspear_diffuse.tga");
+    Texture SpearTex = LoadTexture("ConsoleRenderer/Res/SampleAssets/img/soulspear_diffuse.tga");
 
     //Shader basicShad = MakeShader(.vert, .frag);
     //Geometry basicTriangleGeo = MakeGeometry(triVerts, 3, triIndices, 3);
@@ -32,8 +32,8 @@ int main()
     //View Matrix - makes things RELATIVE to the camera
     glm::mat4 cam_view = 
         glm::lookAt(
-        glm::vec3(0, 1, 5), // eye
-        glm::vec3(0, 0, 0),  // look at position
+        glm::vec3(0, 5, 20), // eye
+        glm::vec3(0, 5, 0),  // look at position
         glm::vec3(0, 1, 0)); // up direction
  
     //Projection Matrix - transforms View Space into Clip Space ( -1 to +1 zone)
@@ -54,13 +54,13 @@ int main()
         Window.Tick();
         Window.Clear();
 
-        SetUniform(texShaderFromFile, 0, cam_proj);
-        SetUniform(texShaderFromFile, 1, cam_view);
-        SetUniform(texShaderFromFile, 2, triangle_model);
-        SetUniform(texShaderFromFile, 3, Jack, 0);
-        //SetUniform(stdShad, 3, checker, 0);           // albedo (main color)
-        //SetUniform(stdShad, 4, ambient);              // ambient light
-        //SetUniform(stdShad, 5, sunDirection);         // NEW: directional light
+        SetUniform(texShaderFromFile, 0, cam_proj);       // projection mat
+        SetUniform(texShaderFromFile, 1, cam_view);       // view mat
+        SetUniform(texShaderFromFile, 2, triangle_model); // model mat
+
+        SetUniform(texShaderFromFile, 3, SpearTex, 0);    // albedo (main color or texture)
+        SetUniform(texShaderFromFile, 4, ambient);        // ambient light
+        SetUniform(texShaderFromFile, 5, sunDirection);   // NEW: directional light
 
 
         Draw(texShaderFromFile, LoadSpear);
